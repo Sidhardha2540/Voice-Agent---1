@@ -10,8 +10,23 @@ A voice agent project for an Amazon/DoorDash-style business: order status, track
 
 ## Status
 
-- **In progress**: Architecture and design; implementation to follow.
-- Contributions and ideas welcome.
+- **Implemented**: Backend (FastAPI + LangChain agent + tools), STT/TTS (OpenAI), turn-based `/voice`, and a minimal web frontend. See **How to run** below.
+- **Next**: Streaming, barge-in, or telephony (optional).
+
+## How to run
+
+1. **Backend** (from project root):
+   ```bash
+   cd backend
+   python -m venv .venv
+   .venv\Scripts\activate   # Windows
+   pip install -r requirements.txt
+   # Set OPENAI_API_KEY in .env (copy from .env.example)
+   uvicorn main:app --reload
+   ```
+   Server: http://localhost:8000. Docs: http://localhost:8000/docs.
+
+2. **Frontend**: Open `frontend/index.html` in a browser (or serve it with any static server). Point the mic, hold the button to talk, release to send. Use customer `cust-alice` for demo data (two orders in mock data).
 
 ## Roadmap / TODO
 

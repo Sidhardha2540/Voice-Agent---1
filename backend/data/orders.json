@@ -1,0 +1,51 @@
+[
+  {
+    "order_id": "QB-1001",
+    "customer_id": "cust-alice",
+    "customer_name": "Alice",
+    "status": "out_for_delivery",
+    "eta_minutes": 12,
+    "items": [
+      { "name": "Veggie Burger", "quantity": 1 },
+      { "name": "Fries", "quantity": 1 }
+    ],
+    "total_usd": 12.99,
+    "placed_at": "2025-02-25T10:30:00Z",
+    "last_updated": "2025-02-25T11:45:00Z",
+    "tracking": {
+      "driver_name": "Mike",
+      "vehicle": "Bike",
+      "current_step": "On the way to you",
+      "estimated_arrival": "11:57"
+    }
+  },
+  {
+    "order_id": "QB-1002",
+    "customer_id": "cust-bob",
+    "customer_name": "Bob",
+    "status": "delivered",
+    "eta_minutes": 0,
+    "items": [
+      { "name": "Chicken Wrap", "quantity": 2 },
+      { "name": "Soda", "quantity": 2 }
+    ],
+    "total_usd": 18.50,
+    "placed_at": "2025-02-24T19:00:00Z",
+    "last_updated": "2025-02-24T19:35:00Z",
+    "tracking": null
+  },
+  {
+    "order_id": "QB-1003",
+    "customer_id": "cust-alice",
+    "customer_name": "Alice",
+    "status": "preparing",
+    "eta_minutes": 25,
+    "items": [
+      { "name": "Caesar Salad", "quantity": 1 }
+    ],
+    "total_usd": 9.99,
+    "placed_at": "2025-02-25T11:50:00Z",
+    "last_updated": "2025-02-25T11:50:00Z",
+    "tracking": null
+  }
+]

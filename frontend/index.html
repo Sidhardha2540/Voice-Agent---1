@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QuickBite Voice Agent</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: system-ui, sans-serif;
+      max-width: 480px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+      background: #0f0f12;
+      color: #e4e4e7;
+    }
+    h1 { font-size: 1.25rem; margin-bottom: 0.5rem; }
+    .sub { color: #71717a; font-size: 0.875rem; margin-bottom: 1.5rem; }
+    .record-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+    button {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      border: none;
+      background: #3b82f6;
+      color: white;
+      font-size: 1.5rem;
+      cursor: pointer;
+      transition: transform 0.1s, background 0.2s;
+    }
+    button:hover { background: #2563eb; transform: scale(1.05); }
+    button:active { transform: scale(0.98); }
+    button.recording { background: #dc2626; animation: pulse 1s infinite; }
+    @keyframes pulse { 50% { opacity: 0.8; } }
+    button:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+    .transcript-box {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      background: #18181b;
+      border-radius: 8px;
+      min-height: 80px;
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+    .transcript-box .label { color: #71717a; font-size: 0.75rem; margin-bottom: 0.25rem; }
+    .transcript-box .content { color: #e4e4e7; }
+    .error { color: #f87171; margin-top: 0.5rem; }
+    .status { color: #71717a; font-size: 0.8rem; margin-top: 0.5rem; }
+  </style>
+</head>
+<body>
+  <h1>QuickBite Voice Agent</h1>
+  <p class="sub">Say "Where's my order?", "Track my delivery", or "Reorder my last order".</p>
+
+  <div class="record-wrap">
+    <button id="recordBtn" type="button" aria-label="Hold to talk">🎤</button>
+    <span class="status" id="status">Click and hold to talk, then release to send.</span>
+  </div>
+
+  <div class="transcript-box">
+    <div class="label">You said</div>
+    <div class="content" id="youSaid">—</div>
+  </div>
+  <div class="transcript-box">
+    <div class="label">Agent</div>
+    <div class="content" id="agentSaid">—</div>
+  </div>
+  <p id="error" class="error"></p>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+# Voice Agent Backend — pinned versions for reproducibility
+# Install: pip install -r requirements.txt (inside a venv)
+
+# Web server
+fastapi>=0.109.0,<0.110
+uvicorn[standard]>=0.27.0
+
+# Agent & LLM
+langchain>=0.1.0
+langchain-openai>=0.0.5
+langchain-core>=0.1.0
+
+# OpenAI (LLM + optional STT/TTS)
+openai>=1.12.0
+
+# Env and types
+python-dotenv>=1.0.0
