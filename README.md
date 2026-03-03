@@ -28,6 +28,16 @@ A voice agent project for an Amazon/DoorDash-style business: order status, track
 
 2. **Frontend**: Open `frontend/index.html` in a browser (or serve it with any static server). Point the mic, hold the button to talk, release to send. Use customer `cust-alice` for demo data (two orders in mock data).
 
+## Running tests
+
+From the `backend/` directory:
+
+```bash
+python -m unittest discover -s tests -v
+```
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for full setup and contribution guidelines.
+
 ## Roadmap / TODO
 
 - **Phase 1 – Core backend**
