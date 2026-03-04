@@ -18,6 +18,9 @@
   const youSaidEl = document.getElementById("youSaid");
   const agentSaidEl = document.getElementById("agentSaid");
   const errorEl = document.getElementById("error");
+  const backendStatusEl = document.getElementById("backendStatus");
+  const chatInput = document.getElementById("chatInput");
+  const sendBtn = document.getElementById("sendBtn");
 
   let mediaRecorder = null;
   let chunks = [];
@@ -34,6 +37,59 @@
   }
   const sessionId = sessionStorage.getItem("voiceAgentSessionId") || randomSessionId();
   sessionStorage.setItem("voiceAgentSessionId", sessionId);
+
+  // Backend connection status (runs on load)
+  fetch(API_BASE + "/health")
+    .then((res) => {
+      if (res.ok) {
+        backendStatusEl.textContent = "Backend connected";
+        backendStatusEl.classList.add("connected");
+        backendStatusEl.classList.remove("disconnected");
+      } else {
+        backendStatusEl.textContent = "Backend error";
+        backendStatusEl.classList.add("disconnected");
+      }
+    })
+    .catch(() => {
+      backendStatusEl.textContent = "Backend disconnected (start the server)";
+      backendStatusEl.classList.add("disconnected");
+    });
+
+  // Text chat: send message to /chat and show reply (same session as voice)
+  function sendTextMessage() {
+    const text = (chatInput.value || "").trim();
+    if (!text) return;
+    setError("");
+    sendBtn.disabled = true;
+    youSaidEl.textContent = text;
+    agentSaidEl.textContent = "…";
+    chatInput.value = "";
+
+    fetch(API_BASE + "/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ session_id: sessionId, message: text }),
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error(res.status + " " + res.statusText);
+        return res.json();
+      })
+      .then((data) => {
+        agentSaidEl.textContent = data.reply || "—";
+      })
+      .catch((err) => {
+        setError("Chat failed: " + err.message);
+        agentSaidEl.textContent = "—";
+      })
+      .finally(() => {
+        sendBtn.disabled = false;
+      });
+  }
+
+  sendBtn.addEventListener("click", sendTextMessage);
+  chatInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") sendTextMessage();
+  });
 
   function startRecording() {
     setError("");

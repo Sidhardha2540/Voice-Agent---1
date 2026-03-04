@@ -26,7 +26,7 @@ A voice agent project for an Amazon/DoorDash-style business: order status, track
    ```
    Server: http://localhost:8000. Docs: http://localhost:8000/docs.
 
-2. **Frontend**: Open `frontend/index.html` in a browser (or serve it with any static server). Point the mic, hold the button to talk, release to send. Use customer `cust-alice` for demo data (two orders in mock data).
+2. **Frontend**: Open `frontend/index.html` in a browser (or serve it with any static server). You can **type** a message (e.g. "Where's my order?") and click Send, or **hold the mic button** to talk—both use the same session and agent. The page shows backend connection status (green when the server is reachable).
 
 ## Running tests
 

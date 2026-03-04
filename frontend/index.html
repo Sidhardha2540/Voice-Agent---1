@@ -51,11 +51,42 @@
     .transcript-box .content { color: #e4e4e7; }
     .error { color: #f87171; margin-top: 0.5rem; }
     .status { color: #71717a; font-size: 0.8rem; margin-top: 0.5rem; }
+    .text-chat { margin-bottom: 1.5rem; }
+    .text-chat .label { color: #71717a; font-size: 0.75rem; display: block; margin-bottom: 0.25rem; }
+    .input-row { display: flex; gap: 0.5rem; margin-top: 0.25rem; }
+    .input-row input {
+      flex: 1;
+      padding: 0.5rem 0.75rem;
+      border: 1px solid #3f3f46;
+      border-radius: 6px;
+      background: #18181b;
+      color: #e4e4e7;
+      font-size: 0.9rem;
+    }
+    .input-row input:focus { outline: none; border-color: #3b82f6; }
+    .input-row button {
+      width: auto;
+      height: auto;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-size: 0.875rem;
+    }
+    #backendStatus.connected { color: #22c55e; }
+    #backendStatus.disconnected { color: #f87171; }
   </style>
 </head>
 <body>
   <h1>QuickBite Voice Agent</h1>
   <p class="sub">Say "Where's my order?", "Track my delivery", or "Reorder my last order".</p>
+  <p class="status" id="backendStatus">Checking backend…</p>
+
+  <section class="text-chat" aria-label="Text chat">
+    <label for="chatInput" class="label">Or type a message</label>
+    <div class="input-row">
+      <input id="chatInput" type="text" placeholder="e.g. Where's my order?" autocomplete="off" />
+      <button id="sendBtn" type="button">Send</button>
+    </div>
+  </section>
 
   <div class="record-wrap">
     <button id="recordBtn" type="button" aria-label="Hold to talk">🎤</button>
