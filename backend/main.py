@@ -10,12 +10,6 @@ Concepts:
 import os
 from pathlib import Path
 
-from dotenv import load_dotenv
-
-# Load .env from project root (parent of backend/) so OPENAI_API_KEY is set
-_env_path = Path(__file__).resolve().parent.parent / ".env"
-load_dotenv(_env_path)
-
 import base64
 from fastapi import FastAPI, File, Form, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
@@ -23,6 +17,13 @@ from pydantic import BaseModel
 
 from agent.runner import chat
 from stt_tts.openai_voice import transcribe, synthesize_speech
+from tools.order_tools import get_order_status, get_tracking_info
+
+from dotenv import load_dotenv
+
+# Load .env from project root (parent of backend/) so OPENAI_API_KEY is set
+_env_path = Path(__file__).resolve().parent.parent / ".env"
+load_dotenv(_env_path)
 
 app = FastAPI(
     title="Voice Agent (QuickBite)",
@@ -47,6 +48,41 @@ def health():
     Use this to verify the server is up (e.g. in CI or from the frontend).
     """
     return {"status": "ok", "service": "voice-agent"}
+
+
+# --- Sample order APIs (useful for testing tools without the agent/voice) ---
+
+
+class OrderStatusResponse(BaseModel):
+    customer_id: str
+    order_id: str | None = None
+    status: str
+
+
+@app.get("/orders/status", response_model=OrderStatusResponse)
+def order_status(customer_id: str = "cust-alice", order_id: str | None = None):
+    """
+    Get the status text for an order using the same logic as the agent tools.
+    If order_id is not provided, returns the most recent order for the customer.
+    """
+    status_text = get_order_status(customer_id, order_id)
+    return OrderStatusResponse(customer_id=customer_id, order_id=order_id, status=status_text)
+
+
+class OrderTrackingResponse(BaseModel):
+    customer_id: str
+    order_id: str | None = None
+    tracking: str
+
+
+@app.get("/orders/tracking", response_model=OrderTrackingResponse)
+def order_tracking(customer_id: str = "cust-alice", order_id: str | None = None):
+    """
+    Get tracking information text for an order (driver, step, ETA).
+    Mirrors the get_tracking_info tool used by the agent.
+    """
+    tracking_text = get_tracking_info(customer_id, order_id)
+    return OrderTrackingResponse(customer_id=customer_id, order_id=order_id, tracking=tracking_text)
 
 
 # --- Step 3: Text chat ---
