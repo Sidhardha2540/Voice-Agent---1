@@ -7,7 +7,7 @@ Concepts:
 - Keeping routes here and heavy logic in agent/ and tools/ keeps the pipeline clear.
 """
 
-import os
+import logging
 from pathlib import Path
 
 import base64
@@ -24,6 +24,9 @@ from dotenv import load_dotenv
 # Load .env from project root (parent of backend/) so OPENAI_API_KEY is set
 _env_path = Path(__file__).resolve().parent.parent / ".env"
 load_dotenv(_env_path)
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 app = FastAPI(
     title="Voice Agent (QuickBite)",
@@ -102,7 +105,9 @@ def chat_endpoint(req: ChatRequest):
     """
     Send a text message, get the agent's reply (with tool use and conversation memory).
     """
+    logger.info("chat session_id=%s message_len=%d", req.session_id, len(req.message or ""))
     reply = chat(session_id=req.session_id, user_message=req.message, customer_id=req.customer_id)
+    logger.info("chat session_id=%s reply_len=%d", req.session_id, len(reply or ""))
     return ChatResponse(reply=reply)
 
 
@@ -126,9 +131,11 @@ async def voice_endpoint(
     """
     audio_bytes = await audio.read()
     filename = audio.filename or "audio.webm"
+    logger.info("voice session_id=%s audio_size=%d", session_id, len(audio_bytes))
     transcript = transcribe(audio_bytes, filename)
     reply = chat(session_id=session_id, user_message=transcript, customer_id=customer_id)
     audio_bytes_out = synthesize_speech(reply)
+    logger.info("voice session_id=%s transcript_len=%d reply_len=%d", session_id, len(transcript or ""), len(reply or ""))
     return VoiceResponse(
         transcript=transcript,
         reply=reply,

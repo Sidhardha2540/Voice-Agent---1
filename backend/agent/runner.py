@@ -14,7 +14,7 @@ from langchain_core.messages import AIMessage, BaseMessage, HumanMessage, System
 from langchain_core.tools import StructuredTool
 from langchain_openai import ChatOpenAI
 
-from tools.order_tools import get_order_status, get_tracking_info, reorder_last_order, get_faq
+from tools.order_tools import get_order_status, get_tracking_info, reorder_last_order, get_faq, cancel_order
 
 
 # Default customer for demo (no auth yet). In production you'd get this from the session/token.
@@ -36,6 +36,9 @@ def _make_tools(customer_id: str) -> list:
     def reorder() -> str:
         return reorder_last_order(customer_id)
 
+    def cancel(order_id: Optional[str] = None) -> str:
+        return cancel_order(customer_id, order_id)
+
     return [
         StructuredTool.from_function(
             func=get_status,
@@ -53,6 +56,11 @@ def _make_tools(customer_id: str) -> list:
             description="Place a new order with the same items as the customer's most recent order.",
         ),
         StructuredTool.from_function(
+            func=cancel,
+            name="cancel_order",
+            description="Cancel the customer's order. Optionally pass order_id (e.g. QB-1001). If not provided, cancels the most recent order. Cannot cancel delivered orders.",
+        ),
+        StructuredTool.from_function(
             func=get_faq,
             name="get_faq",
             description="Answer FAQs about refunds, cancellation, delivery times, contact/support.",
@@ -66,6 +74,7 @@ def _system_prompt(customer_id: str) -> str:
 - Be concise and natural; your replies will be read aloud (TTS).
 - Do not use markdown, bullet lists, or emojis.
 - The current customer ID is: {customer_id}. Use the tools to look up orders, tracking, or reorder when the user asks.
+- If the user wants to cancel an order, use the cancel_order tool.
 - If the user just says hi or thanks, respond briefly without calling tools.
 - If you don't have a tool for something, say so and suggest they contact support or ask about their order."""
 

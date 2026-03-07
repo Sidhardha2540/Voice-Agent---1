@@ -119,3 +119,25 @@ def get_faq(question: str) -> str:
     if "delivery" in q and ("time" in q or "long" in q or "how long" in q):
         return "Delivery usually takes 25–45 minutes depending on distance and restaurant readiness."
     return "I didn't find a specific answer for that. You can say 'contact support' for help, or ask about your order status or tracking."
+
+
+def cancel_order(customer_id: str, order_id: str | None = None) -> str:
+    """
+    Cancel an order for the customer. If order_id is not provided, cancels the most recent order.
+    Use when the user says "cancel my order", "cancel order", "I want to cancel".
+    """
+    orders = _load_orders()
+    if order_id:
+        for o in orders:
+            if o["order_id"] == order_id and o["customer_id"] == customer_id:
+                if o["status"] == "delivered":
+                    return f"Order {o['order_id']} was already delivered and cannot be cancelled."
+                return f"Order {o['order_id']} has been cancelled. Any refund will be processed within 3–5 days."
+        return f"No order found with ID {order_id} for this customer."
+    customer_orders = [o for o in orders if o["customer_id"] == customer_id]
+    if not customer_orders:
+        return "You don't have any orders to cancel."
+    latest = customer_orders[-1]
+    if latest["status"] == "delivered":
+        return f"Order {latest['order_id']} was already delivered and cannot be cancelled."
+    return f"Order {latest['order_id']} has been cancelled. Any refund will be processed within 3–5 days."

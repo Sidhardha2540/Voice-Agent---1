@@ -10,7 +10,7 @@ A voice agent project for an Amazon/DoorDash-style business: order status, track
 
 ## Status
 
-- **Implemented**: Backend (FastAPI + LangChain agent + tools), STT/TTS (OpenAI), turn-based `/voice`, and a minimal web frontend. See **How to run** below.
+- **Implemented**: Backend (FastAPI + LangChain agent + tools), STT/TTS (OpenAI), turn-based `/voice`, text chat + voice frontend, cancel-order tool, request logging. See **How to run** below.
 - **Next**: Streaming, barge-in, or telephony (optional).
 
 ## How to run
@@ -37,6 +37,18 @@ python -m unittest discover -s tests -v
 ```
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for full setup and contribution guidelines.
+
+## API endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/health` | Liveness check |
+| GET | `/orders/status` | Order status (query: `customer_id`, optional `order_id`) |
+| GET | `/orders/tracking` | Tracking info (query: `customer_id`, optional `order_id`) |
+| POST | `/chat` | Text message → agent reply (body: `session_id`, `message`, optional `customer_id`) |
+| POST | `/voice` | Audio upload → transcript, reply, audio (form: `session_id`, `audio`) |
+
+Interactive docs: http://localhost:8000/docs when the backend is running.
 
 ## Roadmap / TODO
 
